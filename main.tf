@@ -60,3 +60,20 @@ resource "openstack_compute_instance_v2" "node_compute" {
     name = var.network
   }
 }
+
+resource "openstack_networking_floatingip_v2" "floating_ips" {
+  count = length(openstack_compute_instance_v2.node_controller) + length(openstack_compute_instance_v2.node_compute)
+  pool  = var.external_network_name
+}
+
+resource "openstack_compute_floatingip_associate_v2" "floating_ips_controller" {
+  count       = length(openstack_compute_instance_v2.node_controller)
+  floating_ip = openstack_networking_floatingip_v2.floating_ips[count.index].address
+  instance_id = openstack_compute_instance_v2.node_controller[count.index].id
+}
+
+resource "openstack_compute_floatingip_associate_v2" "floating_ips_compute" {
+  count       = length(openstack_compute_instance_v2.node_compute)
+  floating_ip = openstack_networking_floatingip_v2.floating_ips[count.index + length(openstack_compute_instance_v2.node_controller)].address
+  instance_id = openstack_compute_instance_v2.node_compute[count.index].id
+}
