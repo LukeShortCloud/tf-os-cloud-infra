@@ -36,7 +36,7 @@ resource "openstack_compute_keypair_v2" "ssh_keypair" {
 }
 
 resource "openstack_compute_instance_v2" "node_controller" {
-  count           = "3"
+  count           = var.node_count_controller
   name            = "tf-cloud-controller-${count.index}"
   image_id        = openstack_images_image_v2.fedora_core_os.id
   flavor_name     = "m1.xlarge"
@@ -49,7 +49,7 @@ resource "openstack_compute_instance_v2" "node_controller" {
 }
 
 resource "openstack_compute_instance_v2" "node_compute" {
-  count           = "2"
+  count           = var.node_count_compute
   name            = "tf-cloud-compute-${count.index}"
   image_id        = openstack_images_image_v2.fedora_core_os.id
   flavor_name     = "m1.medium"

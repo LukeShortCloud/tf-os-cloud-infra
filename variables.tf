@@ -13,6 +13,16 @@ variable "subnet" {
   default = "ekultails-subnet-control"
 }
 
+variable "node_count_controller" {
+  type    = string
+  default = "3"
+}
+
+variable "node_count_compute" {
+  type    = string
+  default = "2"
+}
+
 variable "external_network_id" {
   type    = string
   default = "6a32627e-d98d-40d8-9324-5da7cf1452fc"
