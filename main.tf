@@ -61,6 +61,11 @@ resource "openstack_compute_instance_v2" "node_compute" {
   }
 }
 
+resource "openstack_networking_floatingip_v2" "floating_ips" {
+  count = length(openstack_compute_instance_v2.node_controller) + length(openstack_compute_instance_v2.node_compute)
+  pool  = var.external_network_name
+}
+
 resource "openstack_compute_floatingip_associate_v2" "floating_ips_controller" {
   count       = length(openstack_compute_instance_v2.node_controller)
   floating_ip = openstack_networking_floatingip_v2.floating_ips[count.index].address
